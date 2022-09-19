@@ -1,18 +1,31 @@
 #include <iostream>
 #include <stdlib.h>
+#include <string>
 #include <time.h> //librería para setear el random
 using namespace std;
+int lastIndex(string palabra){ //funcion para encontrar espacios en blanco (para apellidos compuestos)
+    //cout<<"\nEscriba la letra: ";
+    //getline(cin, letra);
+    int lenght = palabra.size();
+    int i= lenght-1;
+    for(i; i>=0; i--){
+       if(palabra[i]==32){
+         return i;
+       }
+    }
+    return -1;
+}
 string nombreCheck(){ // Función para saber si lo escrito por el usuario está en mayúsculas
     // Declaración de variables para la función
     string nombre1; 
     int size, count=0;
-    cin >> nombre1;
+    getline(cin, nombre1);
     char verificador;
 
     size = nombre1.size();
     for(int i=0; i<size; i++){ //ciclo para comparar si las letras son mayusculas
         verificador = nombre1[i];
-        if(verificador < 65 || verificador > 90) count++;
+        if((verificador < 65 && verificador != 32) || verificador > 90) count++;
     }    
     if(count>0){ //Si la cuenta es mayor a 0 es porque hay letras en el nombre que no son mayúsculas
         cout <<"\nLo sentimos, ingrese lo anterior nuevamente en MAYUSCULAS: ";
@@ -40,6 +53,25 @@ string numeroCheck(){ // Función para saber si lo escrito por el usuario son n�
     cout <<"Guardado correctamente\n";
     return numero1;
 }
+string generoCheck(){ // Función para saber si lo escrito por el usuario está en mayúsculas
+    // Declaración de variables para la función
+    string nombre1; 
+    int size, count=0;
+    cin>>nombre1;
+    char verificador;
+
+    size = nombre1.size();
+    for(int i=0; i<size; i++){ //ciclo para comparar si las letras son mayusculas
+        verificador = nombre1[i];
+        if(verificador != 72 && verificador != 77) count++;
+    }    
+    if(count>0){ //Si la cuenta es mayor a 0 es porque hay letras en el nombre que no son mayúsculas
+        cout <<"\nLo sentimos, ingrese una letra valida en MAYUSCULAS: ";
+        return generoCheck(); 
+    }
+    cout <<"Guardado correctamente\n";
+    return nombre1;
+}
 
 
 
@@ -47,7 +79,7 @@ int main(){
     // Declaración de variables generales del usuario, como nombre, apellidos y fecha de nacimiento, etc.
     string CURP[18]; //Variable que almacena los valores de la CURP
     cout << "\nBienvenido, siga las instrucciones para obtener su CURP.\n";
-    cout << "Digite su primer nombre en MAYUSCULAS: ";
+    cout << "Digite su(s) nombre(s) en MAYUSCULAS: ";
     string  nombre1 = nombreCheck();
     cout << "\nDigite su primer apellido en MAYUSCULAS: ";
     string  apellido1 = nombreCheck();
@@ -60,23 +92,28 @@ int main(){
     cout << "\nDigite su dia de nacimiento a 2 digitos: ";
     string dia = numeroCheck();
     cout << "\nDigite H si es hombre o M si es mujer en MAYUSCULAS: ";
-    string genero = nombreCheck();
+    string genero = generoCheck();
 
 
 
 
     //Primer apellido
-    CURP[0] = apellido1[0];
-
+    int apellidoCompuesto1 = lastIndex(apellido1);
+    if(apellidoCompuesto1!=-1) CURP[0] = apellido1[apellidoCompuesto1+1];
+    else CURP[0] = apellido1[0];
+    
     int i=1;
+    if(apellidoCompuesto1!=-1) i=apellidoCompuesto1+1;
+    else i=1;
     char primeraVocalApellido1 = apellido1[i];
-    while(apellido1[i]!=65 && apellido1[i]!=69 && apellido1[i]!=73 && apellido1[i]!=79 && apellido1[i]!=85 ){
+    while(apellido1[i]!=65 && apellido1[i]!=69 && apellido1[i]!=73 && apellido1[i]!=79 && apellido1[i]!=85){
         i++;
         primeraVocalApellido1 = apellido1[i];
     }
     CURP[1] = primeraVocalApellido1;
 
-    i=1;
+    if(apellidoCompuesto1!=-1) i=apellidoCompuesto1+2;
+    else i=1;
     char siguienteConsonanteApellido1 = apellido1[i];
     while(apellido1[i]==65 || apellido1[i]==69 || apellido1[i]==73 || apellido1[i]==79 || apellido1[i]==85){
         i++;
@@ -85,9 +122,13 @@ int main(){
     CURP[13] = siguienteConsonanteApellido1;
 
     //Segundo apellido
-    CURP[2] = apellido2[0];
+    int apellidoCompuesto2 = lastIndex(apellido2);
+    if(apellidoCompuesto2!=-1) i=apellidoCompuesto2+1;
+    else i=0;
+    CURP[2] = apellido2[i];
 
-    i=1;
+    if(apellidoCompuesto2!=-1) i=apellidoCompuesto2+2;
+    else i=1;
     char siguienteConsonanteApellido2 = apellido2[i];
     while(apellido2[i]==65 || apellido2[i]==69 || apellido2[i]==73 || apellido2[i]==79 || apellido2[i]==85){
         i++;
@@ -290,6 +331,5 @@ int main(){
     cout << "\nSu CURP es la siguiente: ";
     for(int i=0; i<18; i++) cout << CURP[i];
     cout << "\n_____________________________________________\n";
-
     return 0;
 }
