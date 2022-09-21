@@ -1,16 +1,14 @@
 #include<iostream>
 using namespace std;
 int main(){
-	int n,sum=0;
-	int x=1;
-for(n=1;n<=100;n++){
+int sum=0;
+for(int i=1;i<=100;i++){
 
-if(x%n==0){
-	sum= sum + n;	
+if(i%2==0){
+	sum= sum + i;	
  }
 }
-x=x+1;
-cout<<"la suma de los numeros primos es: "<<sum;
+cout<<"la suma de los numeros pares es: "<<sum;
 
 return 0;
 }

@@ -2,9 +2,9 @@
 using namespace std;
 int main(){
 	int n,sum=0;
-for(n=1;n<=6;n++){
+for(n=1;n<=100;n++){
 
-if(n%1==0){
+if(n%2!=0){
 	sum= sum + n;	
  }
 }
